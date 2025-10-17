@@ -159,8 +159,8 @@
         return;
       }
 
-      // Generate file name (with .cnf.xml)
-      const fileName = `SEP${mac}.cnf.xml`;
+      // Generate file name (with .cnf.XML - capital letters)
+      const fileName = `SEP${mac}.cnf.XML`;
 
       // Replace placeholder data
       let newXML = baseXML
@@ -171,7 +171,7 @@
       const blob = new Blob([newXML], { type: "application/xml" });
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
-      link.download = fileName;
+      link.download = fileName; // ✅ Capital XML extension
       link.click();
 
       // Reset form
