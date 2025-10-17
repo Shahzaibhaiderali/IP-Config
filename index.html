@@ -1,84 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cisco Config Generator</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
-      font-family: Poppins, sans-serif;
-      background: #0f172a;
+      font-family: "Poppins", sans-serif;
+      background: radial-gradient(circle at 20% 20%, #0f172a, #020617);
       color: #f8fafc;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      margin: 0;
       flex-direction: column;
     }
     h2 {
-      margin-bottom: 10px;
+      margin-bottom: 15px;
       color: #38bdf8;
+      text-shadow: 0 0 10px #38bdf8;
+      letter-spacing: 1px;
+      font-size: 1.6rem;
     }
     form {
-      background: #1e293b;
-      padding: 25px;
+      background: rgba(30, 41, 59, 0.8);
+      backdrop-filter: blur(10px);
+      padding: 30px;
       border-radius: 16px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.3);
-      width: 320px;
+      box-shadow: 0 0 30px rgba(56, 189, 248, 0.2);
+      width: 340px;
+      animation: fadeIn 0.7s ease-in-out;
     }
     label {
       display: block;
       margin-bottom: 6px;
       font-weight: bold;
+      color: #bae6fd;
     }
     input {
       width: 100%;
-      padding: 8px;
-      margin-bottom: 12px;
-      border: none;
-      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 16px;
+      border: 1px solid #334155;
+      border-radius: 10px;
       outline: none;
+      background: #1e293b;
+      color: #f1f5f9;
+      transition: all 0.2s ease-in-out;
+    }
+    input:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
     }
     button {
-      background: #38bdf8;
+      background: linear-gradient(90deg, #0ea5e9, #38bdf8);
       border: none;
       color: #0f172a;
-      padding: 10px 15px;
+      padding: 12px 15px;
       font-weight: bold;
-      border-radius: 8px;
+      border-radius: 10px;
       width: 100%;
       cursor: pointer;
-      transition: 0.3s;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
     }
     button:hover {
-      background: #22d3ee;
+      transform: translateY(-2px);
+      background: linear-gradient(90deg, #38bdf8, #22d3ee);
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
     }
-    textarea {
-      display: none;
-      width: 100%;
-      height: 300px;
-      margin-top: 20px;
-      background: #1e293b;
-      color: #f8fafc;
-      border: none;
-      border-radius: 8px;
-      padding: 10px;
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   </style>
 </head>
 <body>
   <h2>📞 Cisco Config Generator</h2>
   <form id="configForm">
-      <label for="number">SIP Number:</label>
-      <input type="text" id="number" placeholder="e.g. 2001" required>
-    <label for="mac">MAC Address (e.g. 7C95F3C9613E):</label>
-    <input type="text" id="mac" placeholder="Enter MAC Address" required>
+    <label for="number">SIP Number:</label>
+    <input type="text" id="number" placeholder="e.g. 2001" required />
 
+    <label for="mac">MAC Address (e.g. 7C95F3C9613E):</label>
+    <input type="text" id="mac" placeholder="Enter MAC Address" required />
 
     <button type="submit">Generate Config</button>
   </form>
-
-  <textarea id="output" readonly></textarea>
 
   <script>
     const baseXML = `<?xml version="1.0" encoding="UTF-8"?>
@@ -132,6 +150,7 @@
 
     document.getElementById("configForm").addEventListener("submit", function (e) {
       e.preventDefault();
+
       const mac = document.getElementById("mac").value.trim().toUpperCase();
       const number = document.getElementById("number").value.trim();
 
@@ -140,25 +159,43 @@
         return;
       }
 
-      // Generate filename
-      const fileName = `SEP${mac}.cnf`;
+      // Generate file name (with .cnf.xml)
+      const fileName = `SEP${mac}.cnf.xml`;
 
-      // Replace placeholders
+      // Replace placeholder data
       let newXML = baseXML
         .replace(/1035/g, number)
         .replace(/<displayName>.*?<\/displayName>/, `<displayName>${number}</displayName>`);
 
-      // Show result
-      const output = document.getElementById("output");
-      output.style.display = "block";
-      output.value = newXML;
-
-      // Download .cnf file
-      const blob = new Blob([newXML], { type: "text/plain" });
+      // Create downloadable blob
+      const blob = new Blob([newXML], { type: "application/xml" });
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
       link.download = fileName;
       link.click();
+
+      // Reset form
+      document.getElementById("configForm").reset();
+
+      // Toast message
+      const toast = document.createElement("div");
+      toast.textContent = `✅ ${fileName} saved successfully!`;
+      toast.style.position = "fixed";
+      toast.style.bottom = "30px";
+      toast.style.background = "#38bdf8";
+      toast.style.color = "#0f172a";
+      toast.style.padding = "10px 20px";
+      toast.style.borderRadius = "10px";
+      toast.style.boxShadow = "0 0 15px rgba(56, 189, 248, 0.4)";
+      toast.style.fontWeight = "bold";
+      toast.style.transition = "all 0.5s ease";
+      toast.style.opacity = "0";
+      document.body.appendChild(toast);
+      setTimeout(() => (toast.style.opacity = "1"), 100);
+      setTimeout(() => {
+        toast.style.opacity = "0";
+        setTimeout(() => toast.remove(), 500);
+      }, 3000);
     });
   </script>
 </body>
