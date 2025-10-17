@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cisco Config Generator</title>
+  <style>
+    body {
+      font-family: Poppins, sans-serif;
+      background: #0f172a;
+      color: #f8fafc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+    h2 {
+      margin-bottom: 10px;
+      color: #38bdf8;
+    }
+    form {
+      background: #1e293b;
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      width: 320px;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 12px;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+    }
+    button {
+      background: #38bdf8;
+      border: none;
+      color: #0f172a;
+      padding: 10px 15px;
+      font-weight: bold;
+      border-radius: 8px;
+      width: 100%;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #22d3ee;
+    }
+    textarea {
+      display: none;
+      width: 100%;
+      height: 300px;
+      margin-top: 20px;
+      background: #1e293b;
+      color: #f8fafc;
+      border: none;
+      border-radius: 8px;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h2>📞 Cisco Config Generator</h2>
+  <form id="configForm">
+      <label for="number">SIP Number:</label>
+      <input type="text" id="number" placeholder="e.g. 2001" required>
+    <label for="mac">MAC Address (e.g. 7C95F3C9613E):</label>
+    <input type="text" id="mac" placeholder="Enter MAC Address" required>
+
+
+    <button type="submit">Generate Config</button>
+  </form>
+
+  <textarea id="output" readonly></textarea>
+
+  <script>
+    const baseXML = `<?xml version="1.0" encoding="UTF-8"?>
+<device>
+  <deviceProtocol>SIP</deviceProtocol>
+  <sshUserId>admin</sshUserId>
+  <sshPassword>cisco</sshPassword>
+  <devicePool>
+    <dateTimeSetting>
+      <dateTemplate>M/D/Ya</dateTemplate>
+      <timeZone>West Asia Standard Time</timeZone>
+      <ntps>
+        <ntp>
+          <name>192.168.52.2</name>
+          <ntpMode>Unicast</ntpMode>
+        </ntp>
+      </ntps>
+    </dateTimeSetting>
+    <callManagerGroup>
+      <members>
+        <member priority="0">
+          <callManager>
+            <ports>
+              <ethernetPhonePort>2000</ethernetPhonePort>
+              <sipPort>5060</sipPort>
+              <securedSipPort>5061</securedSipPort>
+            </ports>
+            <processNodeName>192.168.52.2</processNodeName>
+          </callManager>
+        </member>
+      </members>
+    </callManagerGroup>
+  </devicePool>
+  <commonProfile>
+    <backgroundImageAccess>true</backgroundImageAccess>
+  </commonProfile>
+  <sipProfile>
+    <sipLines>
+      <line button="1">
+        <featureID>9</featureID>
+        <name>1035</name>
+        <displayName>1035</displayName>
+        <contact>1035</contact>
+        <proxy>USECALLMANAGER</proxy>
+        <authName>1035</authName>
+        <authPassword>Abc@123##</authPassword>
+      </line>
+    </sipLines>
+  </sipProfile>
+</device>`;
+
+    document.getElementById("configForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const mac = document.getElementById("mac").value.trim().toUpperCase();
+      const number = document.getElementById("number").value.trim();
+
+      if (!mac || !number) {
+        alert("Please fill all fields");
+        return;
+      }
+
+      // Generate filename
+      const fileName = `SEP${mac}.cnf`;
+
+      // Replace placeholders
+      let newXML = baseXML
+        .replace(/1035/g, number)
+        .replace(/<displayName>.*?<\/displayName>/, `<displayName>${number}</displayName>`);
+
+      // Show result
+      const output = document.getElementById("output");
+      output.style.display = "block";
+      output.value = newXML;
+
+      // Download .cnf file
+      const blob = new Blob([newXML], { type: "text/plain" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = fileName;
+      link.click();
+    });
+  </script>
+</body>
+</html>
