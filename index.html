@@ -5,9 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cisco Config Generator</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
     body {
       font-family: "Poppins", sans-serif;
       background: radial-gradient(circle at 20% 20%, #0f172a, #020617);
@@ -16,24 +14,20 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
-      margin: 0;
       flex-direction: column;
+      margin: 0;
     }
     h2 {
-      margin-bottom: 15px;
       color: #38bdf8;
       text-shadow: 0 0 10px #38bdf8;
-      letter-spacing: 1px;
-      font-size: 1.6rem;
+      margin-bottom: 15px;
     }
     form {
       background: rgba(30, 41, 59, 0.8);
-      backdrop-filter: blur(10px);
       padding: 30px;
       border-radius: 16px;
       box-shadow: 0 0 30px rgba(56, 189, 248, 0.2);
       width: 340px;
-      animation: fadeIn 0.7s ease-in-out;
     }
     label {
       display: block;
@@ -47,10 +41,9 @@
       margin-bottom: 16px;
       border: 1px solid #334155;
       border-radius: 10px;
-      outline: none;
       background: #1e293b;
       color: #f1f5f9;
-      transition: all 0.2s ease-in-out;
+      outline: none;
     }
     input:focus {
       border-color: #38bdf8;
@@ -65,7 +58,7 @@
       border-radius: 10px;
       width: 100%;
       cursor: pointer;
-      transition: all 0.3s ease-in-out;
+      transition: 0.3s;
       box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
     }
     button:hover {
@@ -73,24 +66,13 @@
       background: linear-gradient(90deg, #38bdf8, #22d3ee);
       box-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
     }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
   </style>
 </head>
 <body>
   <h2>📞 Cisco Config Generator</h2>
   <form id="configForm">
     <label for="number">SIP Number:</label>
-    <input type="text" id="number" placeholder="e.g. 2001" required />
+    <input type="text" id="number" placeholder="e.g. 1035" required />
 
     <label for="mac">MAC Address (e.g. 7C95F3C9613E):</label>
     <input type="text" id="mac" placeholder="Enter MAC Address" required />
@@ -101,50 +83,204 @@
   <script>
     const baseXML = `<?xml version="1.0" encoding="UTF-8"?>
 <device>
+
   <deviceProtocol>SIP</deviceProtocol>
+
   <sshUserId>admin</sshUserId>
   <sshPassword>cisco</sshPassword>
+
   <devicePool>
-    <dateTimeSetting>
-      <dateTemplate>M/D/Ya</dateTemplate>
-      <timeZone>West Asia Standard Time</timeZone>
-      <ntps>
-        <ntp>
-          <name>192.168.52.2</name>
-          <ntpMode>Unicast</ntpMode>
-        </ntp>
-      </ntps>
-    </dateTimeSetting>
-    <callManagerGroup>
-      <members>
-        <member priority="0">
-          <callManager>
-            <ports>
-              <ethernetPhonePort>2000</ethernetPhonePort>
-              <sipPort>5060</sipPort>
-              <securedSipPort>5061</securedSipPort>
-            </ports>
-            <processNodeName>192.168.52.2</processNodeName>
-          </callManager>
-        </member>
-      </members>
-    </callManagerGroup>
+                <dateTimeSetting>
+                        <dateTemplate>M/D/Ya</dateTemplate>
+                        <timeZone>West Asia Standard Time</timeZone>
+			
+                        <ntps>
+                                <ntp>
+                                        <name>192.168.52.2</name>
+                                        <ntpMode>Unicast</ntpMode>
+                                </ntp>
+                        </ntps>
+                </dateTimeSetting>
+
+     <callManagerGroup>
+        <members>
+           <member priority="0">
+              <callManager>
+                 <ports>
+                    <ethernetPhonePort>2000</ethernetPhonePort>
+                    <sipPort>5060</sipPort>
+                    <securedSipPort>5061</securedSipPort>
+                 </ports>
+                 <processNodeName>192.168.52.2</processNodeName>
+              </callManager>
+           </member>
+        </members>
+     </callManagerGroup>
   </devicePool>
+
   <commonProfile>
-    <backgroundImageAccess>true</backgroundImageAccess>
+     <phonePassword></phonePassword>
+     <backgroundImageAccess>true</backgroundImageAccess>
+     <callLogBlfEnabled>2</callLogBlfEnabled>
   </commonProfile>
-  <sipProfile>
-    <sipLines>
-      <line button="1">
-        <featureID>9</featureID>
-        <name>1035</name>
-        <displayName>1035</displayName>
-        <contact>1035</contact>
-        <proxy>USECALLMANAGER</proxy>
-        <authName>1035</authName>
-        <authPassword>Abc@123##</authPassword>
-      </line>
-    </sipLines>
+
+  <loadInformation>SIP45.9-3-1SR4-1S</loadInformation>
+
+  <vendorConfig>
+     <disableSpeaker>false</disableSpeaker>
+     <disableSpeakerAndHeadset>false</disableSpeakerAndHeadset>
+     <pcPort>0</pcPort>
+     <settingsAccess>1</settingsAccess>
+     <garp>0</garp>
+     <voiceVlanAccess>0</voiceVlanAccess>
+     <videoCapability>0</videoCapability>
+     <autoSelectLineEnable>0</autoSelectLineEnable>
+
+     <webAccess>0</webAccess>
+     <spanToPCPort>1</spanToPCPort>
+     <loggingDisplay>1</loggingDisplay>
+     <loadServer></loadServer>
+     <daysDisplayNotActive></daysDisplayNotActive>
+     <displayOnTime>07:00</displayOnTime>
+     <displayOnDuration>17:00</displayOnDuration>
+     <displayIdleTimeout>1:00</displayIdleTimeout>
+  </vendorConfig>
+
+  <deviceSecurityMode>1</deviceSecurityMode>
+
+  <authenticationURL>http://192.168.52.2/cisco/services/authentication.php</authenticationURL>
+  <directoryURL>http://192.168.52.2/xmlservices/PhoneDirectory.php</directoryURL>
+  <idleURL>http://192.168.52.2/xmlservices/index.php</idleURL>
+  <informationURL></informationURL>
+
+  <messagesURL></messagesURL>
+  <proxyServerURL></proxyServerURL>
+  <servicesURL>http://phone-xml.berbee.com/menu.xml</servicesURL>
+  <dscpForSCCPPhoneConfig>96</dscpForSCCPPhoneConfig>
+  <dscpForSCCPPhoneServices>0</dscpForSCCPPhoneServices>
+  <dscpForCm2Dvce>96</dscpForCm2Dvce>
+
+  <transportLayerProtocol>4</transportLayerProtocol>
+
+  <capfAuthMode>0</capfAuthMode>
+  <capfList>
+     <capf>
+        <phonePort>3804</phonePort>
+     </capf>
+  </capfList>
+
+  <certHash></certHash>
+  <encrConfig>false</encrConfig>
+
+   <sipProfile>
+     <sipProxies>
+        <backupProxy></backupProxy>
+        <backupProxyPort></backupProxyPort>
+        <emergencyProxy></emergencyProxy>
+        <emergencyProxyPort></emergencyProxyPort>
+        <outboundProxy></outboundProxy>
+        <outboundProxyPort></outboundProxyPort>
+        <registerWithProxy>true</registerWithProxy>
+     </sipProxies>
+
+     <sipCallFeatures>
+        <cnfJoinEnabled>true</cnfJoinEnabled>
+        <callForwardURI>x--serviceuri-cfwdall</callForwardURI>
+        <callPickupURI>x-cisco-serviceuri-pickup</callPickupURI>
+        <callPickupListURI>x-cisco-serviceuri-opickup</callPickupListURI>
+        <callPickupGroupURI>x-cisco-serviceuri-gpickup</callPickupGroupURI>
+        <meetMeServiceURI>x-cisco-serviceuri-meetme</meetMeServiceURI>
+        <abbreviatedDialURI>x-cisco-serviceuri-abbrdial</abbreviatedDialURI>
+        <rfc2543Hold>false</rfc2543Hold>
+        <callHoldRingback>2</callHoldRingback>
+        <localCfwdEnable>true</localCfwdEnable>
+        <semiAttendedTransfer>true</semiAttendedTransfer>
+        <anonymousCallBlock>2</anonymousCallBlock>
+        <callerIdBlocking>2</callerIdBlocking>
+        <dndControl>0</dndControl>
+        <remoteCcEnable>true</remoteCcEnable>
+     </sipCallFeatures>
+
+     <sipStack>
+        <sipInviteRetx>6</sipInviteRetx>
+        <sipRetx>10</sipRetx>
+        <timerInviteExpires>180</timerInviteExpires>
+        <timerRegisterExpires>3600</timerRegisterExpires>
+        <timerRegisterDelta>5</timerRegisterDelta>
+        <timerKeepAliveExpires>120</timerKeepAliveExpires>
+        <timerSubscribeExpires>120</timerSubscribeExpires>
+        <timerSubscribeDelta>5</timerSubscribeDelta>
+        <timerT1>500</timerT1>
+        <timerT2>4000</timerT2>
+        <maxRedirects>70</maxRedirects>
+        <remotePartyID>false</remotePartyID>
+        <userInfo>None</userInfo>
+     </sipStack>
+
+     <autoAnswerTimer>1</autoAnswerTimer>
+     <autoAnswerAltBehavior>false</autoAnswerAltBehavior>
+     <autoAnswerOverride>true</autoAnswerOverride>
+     <transferOnhookEnabled>false</transferOnhookEnabled>
+     <enableVad>false</enableVad>
+     <preferredCodec>none</preferredCodec>
+     <dtmfAvtPayload>101</dtmfAvtPayload>
+     <dtmfDbLevel>3</dtmfDbLevel>
+     <dtmfOutofBand>avt</dtmfOutofBand>
+     <alwaysUsePrimeLine>false</alwaysUsePrimeLine>
+     <alwaysUsePrimeLineVoiceMail>false</alwaysUsePrimeLineVoiceMail>
+     <kpml>3</kpml>
+
+     <natEnabled>false</natEnabled>
+     <natAddress></natAddress>
+
+     <stutterMsgWaiting>0</stutterMsgWaiting>
+
+     <callStats>false</callStats>
+     <silentPeriodBetweenCallWaitingBursts>10</silentPeriodBetweenCallWaitingBursts>
+     <disableLocalSpeedDialConfig>false</disableLocalSpeedDialConfig>
+
+
+     <startMediaPort>16384</startMediaPort>
+     <stopMediaPort>32766</stopMediaPort>
+
+         <voipControlPort>5060</voipControlPort>
+     <dscpForAudio>184</dscpForAudio>
+     <ringSettingBusyStationPolicy>0</ringSettingBusyStationPolicy>
+     <dialTemplate>dialplan.xml</dialTemplate>
+
+         <phoneLabel></phoneLabel>
+     <sipLines>
+        <line button="1">
+           <featureID>9</featureID>
+           <featureLabel></featureLabel>
+                   <name>1035</name>
+                   <displayName>1035</displayName>
+                   <contact>1035</contact>
+
+           <proxy>USECALLMANAGER</proxy>
+           <port>5060</port>
+           <autoAnswer>
+              <autoAnswerEnabled>2</autoAnswerEnabled>
+           </autoAnswer>
+           <callWaiting>3</callWaiting>
+
+           <authName>1035</authName>
+           <authPassword>Abc@123##</authPassword>
+
+           <sharedLine>false</sharedLine>
+           <messageWaitingLampPolicy>1</messageWaitingLampPolicy>
+           <messagesNumber>*97</messagesNumber>
+           <ringSettingIdle>4</ringSettingIdle>
+           <ringSettingActive>5</ringSettingActive>
+
+           <forwardCallInfoDisplay>
+              <callerName>true</callerName>
+              <callerNumber>false</callerNumber>
+              <redirectedNumber>false</redirectedNumber>
+              <dialedNumber>true</dialedNumber>
+           </forwardCallInfoDisplay>
+        </line>
+     </sipLines>
   </sipProfile>
 </device>`;
 
@@ -159,25 +295,18 @@
         return;
       }
 
-      // Generate file name (with .cnf.XML - capital letters)
       const fileName = `SEP${mac}.cnf.XML`;
 
-      // Replace placeholder data
-      let newXML = baseXML
-        .replace(/1035/g, number)
-        .replace(/<displayName>.*?<\/displayName>/, `<displayName>${number}</displayName>`);
+      // Replace SIP number dynamically
+      const newXML = baseXML.replace(/1035/g, number);
 
-      // Create downloadable blob
       const blob = new Blob([newXML], { type: "application/xml" });
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
-      link.download = fileName; // ✅ Capital XML extension
+      link.download = fileName;
       link.click();
 
-      // Reset form
-      document.getElementById("configForm").reset();
-
-      // Toast message
+      // Show success message
       const toast = document.createElement("div");
       toast.textContent = `✅ ${fileName} saved successfully!`;
       toast.style.position = "fixed";
@@ -186,16 +315,9 @@
       toast.style.color = "#0f172a";
       toast.style.padding = "10px 20px";
       toast.style.borderRadius = "10px";
-      toast.style.boxShadow = "0 0 15px rgba(56, 189, 248, 0.4)";
       toast.style.fontWeight = "bold";
-      toast.style.transition = "all 0.5s ease";
-      toast.style.opacity = "0";
       document.body.appendChild(toast);
-      setTimeout(() => (toast.style.opacity = "1"), 100);
-      setTimeout(() => {
-        toast.style.opacity = "0";
-        setTimeout(() => toast.remove(), 500);
-      }, 3000);
+      setTimeout(() => toast.remove(), 3000);
     });
   </script>
 </body>
